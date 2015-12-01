@@ -1,0 +1,38 @@
+import numpy as np
+
+#[int(x) for x in (bin(2**a1 + 2**a2 + 2**a3 + 2**a4 + 2**a5 + 2**a6 + 2**a7 + 2**a8 + 2**a9 + 2**a10))[2:].zfill(50)]
+
+
+a1 = 44
+while a1 <= 48:
+    a1 += 1
+    a2 = 39
+    while a2 <= 43:
+        a2 += 1
+        a3 = 34
+        while a3 <= 38:
+            a3 += 1
+            a4 = 29
+            while a4 <= 33:
+                a4 += 1
+                a5 = 24
+                while a5 <= 28:
+                    a5 += 1
+                    a6 = 19
+                    while a6 <= 23:
+                        a7 = 14
+                        a6 += 1
+                        while a7 <= 18:
+                            a8 = 9
+                            a7 += 1
+                            while a8 <= 13:
+                                a9 = 4
+                                a8 += 1
+                                while a9 <= 8:
+                                    a10 = 0
+                                    a9 += 1
+                                    while a10 <= 4:
+                                        val = np.array([int(x) for x in bin(2**a1 + 2**a2 + 2**a3 + 2**a4 + 2**a5 + 2**a6 + 2**a7 + 2**a8 + 2**a9 + 2**a10)[2:].zfill(50)])
+                                        a10 += 1
+                                        val.shape = (10,5)
+                                        print val
