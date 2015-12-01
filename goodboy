@@ -1,0 +1,241 @@
+import numpy as np
+
+
+# section 1
+######data input values. (X, P, D are copies of the following, NOT A REFERENCE)
+cost_per_km = 20  # = gas price / (km * Nm3)
+
+
+CAP = [10000, 2000, 4000, 20000, 45000]         # capacity of each factory
+                                                # [0] Yeosu
+                                                # [1] Ulsan
+                                                # [2] Daesan
+                                                # [3] Dangjin
+                                                # [4] Ansan
+
+
+buy_price = np.array([120, 100, 150, 170, 220]) # sourcing cost for each factory
+                                                # [0] Yeosu
+                                                # [1] Ulsan
+                                                # [2] Daesan
+                                                # [3] Dangjin
+                                                # [4] Ansan
+
+
+sell_price = np.array([450,       # 000 price of good to each customer
+                       580,       # 001
+                       400,       # 002
+                       600,       # 003
+                       390,       # 004
+                       450,       # 005
+                       610,       # 006
+                       490,       # 007
+                       500,       # 008
+                       420])      # 009
+
+weight = np.array([4000,          # 000 demand of each customer
+                   1000,          # 001
+                   4000,          # 002
+                   10000,         # 003
+                   7500,          # 004
+                   2000,          # 005
+                   15000,         # 006
+                   9500,          # 007
+                   8000,          # 008
+                   12000])       # 009
+
+weight_array = np.array([[4000],          # 000 demand of each customer
+                   [1000],          # 001
+                   [4000],          # 002
+                   [10000],         # 003
+                   [7500],          # 004
+                   [2000],          # 005
+                   [15000],         # 006
+                   [9500],          # 007
+                   [8000],          # 008
+                   [12000]])      # 009
+
+
+# distance input values for X and D
+
+input_D000 = [1,1,4,6,5]
+input_D001 = [2,1,1,4,4]
+input_D002 = [1,3,5,3,2]
+input_D003 = [4,4,1,2,5]
+input_D004 = [8,7,1,2,5]
+input_D005 = [2,2,1,7,7]
+input_D006 = [7,5,3,2,1]
+input_D007 = [3,4,1,6,1]
+input_D008 = [4,2,5,7,1]
+input_D009 = [4,5,3,5,3]
+
+X = np.zeros((10, 5), dtype =  int)
+
+
+D = np.array([input_D000, input_D001, input_D002, input_D003, input_D004,
+              input_D005, input_D006, input_D007, input_D008, input_D009])
+
+#########################################################################
+
+# profit input values for P
+def pi(demand, source):
+    return weight[demand] * (sell_price[demand] - buy_price[source] - (D[demand, source] * cost_per_km))
+
+#input_P(x) = [pi(x,0), pi(x,1), pi(x,2), pi(x,3), pi(x,4)]
+#input_P000 = [pi(0,0), pi(0,1), pi(0,2), pi(0,3), pi(0,4)]
+
+def input_P(j):
+     return np.array([pi(j,0), pi(j,1), pi(j,2), pi(j,3), pi(j,4)])
+
+P = np.array([input_P(0), input_P(1), input_P(2), input_P(3), input_P(4),
+              input_P(5), input_P(6), input_P(7), input_P(8), input_P(9)])
+
+################# kth biggest module ################
+
+def kth_biggest(seq, k):
+    """ kth_biggest without sorting all array or repeating to find maximum k times
+        will crash sooner or later becouse of recursion and Python's recursion limit,
+        but not so soon because of divide and conquer algorithm inspired by quicksort
+    """
+    assert k > 0,'k must be positive %i' % k
+    ls = len(seq)
+    if ls < k:
+        raise ValueError('kth %i: only %i elements' % (k, ls))
+    if k == 1:
+        return max(seq)
+    if k == ls:
+        return min(seq)
+    pivot = seq[0]
+    bigger =  [item for item in seq[1:] if item > pivot]
+    if len(bigger) == k - 1:
+        return pivot
+    elif len(bigger) >= k:
+        return kth_biggest(bigger, k)
+    not_bigger = [item for item in seq[1:] if item <= pivot]
+    return kth_biggest(not_bigger, k - len(bigger) - 1)
+
+def kth_smallest(seq, k):
+    return kth_biggest(seq, len(seq) - k + 1)
+
+##################### algorithm #########################
+
+flow_rate = np.zeros((10,5), dtype = float)
+
+remaining_CAP = np.zeros((5,1), dtype = float)
+
+
+m = 5    # number of factories, counting starts from 0 --- index "i"
+n = 10   # number of customers, counting starts from 0 --- index "j"
+rangeM = range(0,m)
+rangeN = range(0,n)
+
+###
+
+U = np.zeros((n), dtype = float)
+
+for j in range (0,n):
+    U[j] = kth_biggest(P[j,:], 2)
+
+U3 = sum(U)
+
+### create (10,5) array of values which satisfy Ni = {j of N :  pij - lam > 0}
+
+setN =  np.zeros((10,5), dtype = int)
+
+N = [[],[],[],[],[]]
+
+z = np.zeros((1,5), dtype = float)
+delta = 0.00001
+for i in range(0,m):
+    for j in range(0,n):
+        if P[j,i] - kth_biggest(P[j,:], 2) > -delta:
+            setN[j,i] = 1                  # let N[:,i] = {j of N : pij - lambda,j > 0}
+            list.append(N[i], j)
+
+print N
+
+opcost = np.zeros((10,5), dtype = float)
+K = np.zeros((10,5), dtype = int)
+
+m = 4
+n = 9
+
+for i in range(0,m+1):
+    for j in range(0,n+1):
+        for k in range(1,5):
+            if P[j,i] == kth_biggest(P[j,:], k):
+                opcost[j,i] = P[j,i] - kth_biggest(P[j,:], k+1)
+                K[j,i] = k - 1
+            elif P[j,i] == min(P[j,:]):
+                K[j,i] = 4
+
+profit_per_unit = np.zeros((10,5), dtype = float)
+Kvert = [[],[],[],[],[]]
+
+
+for i in range(0,m+1):
+    for j in range(0,n+1):
+        profit_per_unit[j,i] = P[j,i] / weight[j]
+
+opcost_per_weight = opcost / weight_array
+theda = 0
+priority = 0
+while priority < 5:
+    for j in range(0,10):
+        for i in range(0,5):
+            flow_rate = X * weight_array
+            remaining_CAP[i] = CAP[i] - sum(flow_rate[:,i])
+            while remaining_CAP[i] - weight[j] > 0 and sum(X[j,:]) == 0:
+                if K[j,i] == priority and opcost_per_weight[j,i] >= theda:
+                    X[j,i] = 1
+                elif remaining_CAP[i] - weight[j] < 0:
+                    X[j,i] = 0
+                break
+    priority += 1
+
+flow_rate = X * weight_array
+for i in range(0,5):
+    remaining_CAP[i] = CAP[i] - sum(flow_rate[:,i])
+
+total_profit = sum(sum(X*P))
+
+print 'X after iteration 1'
+print X
+print \
+
+print 'weight array'
+print weight_array * X
+
+print remaining_CAP
+
+print 'K values'
+print K
+
+print 'opcost'
+print opcost
+print \
+
+print 'array of possible profits'
+print P
+print \
+
+print 'profit array'
+print P * X
+print \
+
+print 'total profit'
+print total_profit
+print \
+
+print 'remaining CAP'
+print remaining_CAP
+print \
+
+print 'flow rate'
+print flow_rate
+print \
+
+print 'distance array'
+print D
+print \
+
