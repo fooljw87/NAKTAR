@@ -285,7 +285,7 @@ n = 20
 
 total_profit = sum(sum(X*P))
 
-#########################
+################################################# make pools
 
 in_basket = [True, True, False, True, True, True, True, True, True, True,
              True, True, False, False, False, False, False, False, False, False,
@@ -316,6 +316,8 @@ for j in range(len(jlist)):
     weight_pool[j] = weight[jlist[j]]
 
 X_pool = np.zeros((len(jlist),m), dtype = int)
+
+#############################################################
 
 
 flow_rate = X * weight
@@ -1774,3 +1776,4 @@ if len(jlist) == 20:
                                                                                                             print X_pool
                                                                                                             print Superdata
                                                                                                             print max(Superdata)
+
