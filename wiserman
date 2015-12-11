@@ -105,7 +105,8 @@ D = np.zeros((20,5), dtype = int)
 P = np.zeros((20,5), dtype = float)
 weight = np.zeros((20,1), dtype = float)
 X = np.zeros((20,5), dtype = int)
-remaining_CAP = [25000, 4500, 7000, 150000, 35000]
+
+remaining_CAP = np.zeros((5,1), dtype = float)
 
 cuslist = []
 cusdata = []
@@ -286,8 +287,8 @@ total_profit = sum(sum(X*P))
 
 #########################
 
-in_basket = [True, True, False, True, True, True, False, False, False, False,
-             False, False, False, False, False, False, False, False, False, False,
+in_basket = [True, True, False, True, True, True, True, True, True, True,
+             True, True, False, False, False, False, False, False, False, False,
              False, False, False, False, False, False, False, False, False, False,
              False, False, False, False, False, False, False, False, False, False]
 
@@ -314,14 +315,8 @@ weight_pool = np.zeros((len(jlist), 1), dtype = float)
 for j in range(len(jlist)):
     weight_pool[j] = weight[jlist[j]]
 
-print 'jlist'
-print jlist
-print 'jpool'
-print jpool
-print 'P_pool'
-print P_pool
-print 'weight_pool'
-print weight_pool
+X_pool = np.zeros((len(jlist),m), dtype = int)
+
 
 flow_rate = X * weight
 
@@ -349,21 +344,26 @@ for i in range(0,m):
         profit_per_unit[j,i] = P[j,i] / weight[j]
 
 opcost_per_weight = opcost / weight
-theda = 0
-priority = 5
-while priority >= 0:
-    for j in range(0,len(jlist)):
-        for i in range(0,5):
-            if CAP[i] - weight[j] < 0:
-                jpool[j,i] = 0
+#theda = 0
+#priority = 5
+#while priority >= 0:
+#    for j in range(0,len(jlist)):
+#        for i in range(0,5):
+#            if CAP[i] - weight_pool[j] < 0:
+#                jpool[j,i] = 0
 #            flow_rate = X * weight_array
 #            remaining_CAP[i] = CAP[i] - sum(flow_rate[:,i])
 #            while remaining_CAP[i] - weight[j] > 0 and sum(X[j,:]) == 0:
 #            if K[j,i] == priority and
-            if opcost_per_weight[j,i] > 150:
-                jpool[j,i] = 0
+#            if opcost_per_weight[j,i] > 150:
+#                jpool[j,i] = 0
 #                break
-        priority -= 1
+#        priority -= 1
+
+for i in range(0,m):
+    for j in range(0,len(jlist)):
+        if CAP[i] - weight_pool[j] < 0:
+            jpool[j,i] = 0
 
 theda = 0
 priority = 0
@@ -379,6 +379,15 @@ while priority < 5:
                     X[j,i] = 0
                 break
     priority += 1
+
+print 'jlist'
+print jlist
+print 'jpool'
+print jpool
+print 'P_pool'
+print P_pool
+print 'weight_pool'
+print weight_pool
 
 ###########################
 
@@ -397,6 +406,8 @@ if len(jlist) == 1:
                         if CAP[3] > sum((val * weight_pool)[:,3]):
                             if CAP[4] > sum((val * weight_pool)[:,4]):
                                 list.append(Superdata, sum(sum(val * P_pool)))
+                                X_pool = val
+                                print X_pool
                                 print Superdata
                                 print max(Superdata)
 
@@ -420,6 +431,8 @@ if len(jlist) == 2:
                             if CAP[3] > sum((val * weight_pool)[:,3]):
                                 if CAP[4] > sum((val * weight_pool)[:,4]):
                                     list.append(Superdata, sum(sum(val * P_pool)))
+                                    X_pool = val
+                                    print X_pool
                                     print Superdata
                                     print max(Superdata)
 if len(jlist) == 3:
@@ -447,6 +460,8 @@ if len(jlist) == 3:
                                 if CAP[3] > sum((val * weight_pool)[:,3]):
                                     if CAP[4] > sum((val * weight_pool)[:,4]):
                                         list.append(Superdata, sum(sum(val * P_pool)))
+                                        X_pool = val
+                                        print X_pool
                                         print Superdata
                                         print max(Superdata)
 
@@ -480,6 +495,8 @@ if len(jlist) == 4:
                                     if CAP[3] > sum((val * weight_pool)[:,3]):
                                         if CAP[4] > sum((val * weight_pool)[:,4]):
                                             list.append(Superdata, sum(sum(val * P_pool)))
+                                            X_pool = val
+                                            print X_pool
                                             print Superdata
                                             print max(Superdata)
 
@@ -519,6 +536,8 @@ if len(jlist) == 5:
                                         if CAP[3] > sum((val * weight_pool)[:,3]):
                                             if CAP[4] > sum((val * weight_pool)[:,4]):
                                                 list.append(Superdata, sum(sum(val * P_pool)))
+                                                X_pool = val
+                                                print X_pool
                                                 print Superdata
                                                 print max(Superdata)
 
@@ -563,6 +582,8 @@ if len(jlist) == 6:
                                             if CAP[3] > sum((val * weight_pool)[:,3]):
                                                 if CAP[4] > sum((val * weight_pool)[:,4]):
                                                     list.append(Superdata, sum(sum(val * P_pool)))
+                                                    X_pool = val
+                                                    print X_pool
                                                     print Superdata
                                                     print max(Superdata)
 
@@ -612,6 +633,8 @@ if len(jlist) == 7:
                                                 if CAP[3] > sum((val * weight_pool)[:,3]):
                                                     if CAP[4] > sum((val * weight_pool)[:,4]):
                                                         list.append(Superdata, sum(sum(val * P_pool)))
+                                                        X_pool = val
+                                                        print X_pool
                                                         print Superdata
                                                         print max(Superdata)
 
@@ -666,6 +689,8 @@ if len(jlist) == 8:
                                                     if CAP[3] > sum((val * weight_pool)[:,3]):
                                                         if CAP[4] > sum((val * weight_pool)[:,4]):
                                                             list.append(Superdata, sum(sum(val * P_pool)))
+                                                            X_pool = val
+                                                            print X_pool
                                                             print Superdata
                                                             print max(Superdata)
 
@@ -727,6 +752,8 @@ if len(jlist) == 9:
                                                         if CAP[3] > sum((val * weight_pool)[:,3]):
                                                             if CAP[4] > sum((val * weight_pool)[:,4]):
                                                                 list.append(Superdata, sum(sum(val * P_pool)))
+                                                                X_pool = val
+                                                                print X_pool
                                                                 print Superdata
                                                                 print max(Superdata)
 
@@ -791,6 +818,8 @@ if len(jlist) == 10:
                                                             if CAP[3] > sum((val * weight_pool)[:,3]):
                                                                 if CAP[4] > sum((val * weight_pool)[:,4]):
                                                                     list.append(Superdata, sum(sum(val * P_pool)))
+                                                                    X_pool = val
+                                                                    print X_pool
                                                                     print Superdata
                                                                     print max(Superdata)
 
@@ -861,6 +890,8 @@ if len(jlist) == 11:
                                                                 if CAP[3] > sum((val * weight_pool)[:,3]):
                                                                     if CAP[4] > sum((val * weight_pool)[:,4]):
                                                                         list.append(Superdata, sum(sum(val * P_pool)))
+                                                                        X_pool = val
+                                                                        print X_pool
                                                                         print Superdata
                                                                         print max(Superdata)
 
@@ -936,6 +967,8 @@ if len(jlist) == 12:
                                                                     if CAP[3] > sum((val * weight_pool)[:,3]):
                                                                         if CAP[4] > sum((val * weight_pool)[:,4]):
                                                                             list.append(Superdata, sum(sum(val * P_pool)))
+                                                                            X_pool = val
+                                                                            print X_pool
                                                                             print Superdata
                                                                             print max(Superdata)
 
@@ -1016,6 +1049,8 @@ if len(jlist) == 13:
                                                                         if CAP[3] > sum((val * weight_pool)[:,3]):
                                                                             if CAP[4] > sum((val * weight_pool)[:,4]):
                                                                                 list.append(Superdata, sum(sum(val * P_pool)))
+                                                                                X_pool = val
+                                                                                print X_pool
                                                                                 print Superdata
                                                                                 print max(Superdata)
 
@@ -1101,6 +1136,8 @@ if len(jlist) == 14:
                                                                             if CAP[3] > sum((val * weight_pool)[:,3]):
                                                                                 if CAP[4] > sum((val * weight_pool)[:,4]):
                                                                                     list.append(Superdata, sum(sum(val * P_pool)))
+                                                                                    X_pool = val
+                                                                                    print X_pool
                                                                                     print Superdata
                                                                                     print max(Superdata)
 
@@ -1192,6 +1229,8 @@ if len(jlist) == 15:
                                                                                 if CAP[3] > sum((val * weight_pool)[:,3]):
                                                                                     if CAP[4] > sum((val * weight_pool)[:,4]):
                                                                                         list.append(Superdata, sum(sum(val * P_pool)))
+                                                                                        X_pool = val
+                                                                                        print X_pool
                                                                                         print Superdata
                                                                                         print max(Superdata)
 
@@ -1288,6 +1327,8 @@ if len(jlist) == 16:
                                                                                     if CAP[3] > sum((val * weight_pool)[:,3]):
                                                                                         if CAP[4] > sum((val * weight_pool)[:,4]):
                                                                                             list.append(Superdata, sum(sum(val * P_pool)))
+                                                                                            X_pool = val
+                                                                                            print X_pool
                                                                                             print Superdata
                                                                                             print max(Superdata)
 
@@ -1390,6 +1431,8 @@ if len(jlist) == 17:
                                                                                         if CAP[3] > sum((val * weight_pool)[:,3]):
                                                                                             if CAP[4] > sum((val * weight_pool)[:,4]):
                                                                                                 list.append(Superdata, sum(sum(val * P_pool)))
+                                                                                                X_pool = val
+                                                                                                print X_pool
                                                                                                 print Superdata
                                                                                                 print max(Superdata)
 
@@ -1496,6 +1539,8 @@ if len(jlist) == 18:
                                                                                             if CAP[3] > sum((val * weight_pool)[:,3]):
                                                                                                 if CAP[4] > sum((val * weight_pool)[:,4]):
                                                                                                     list.append(Superdata, sum(sum(val * P_pool)))
+                                                                                                    X_pool = val
+                                                                                                    print X_pool
                                                                                                     print Superdata
                                                                                                     print max(Superdata)
 
@@ -1607,6 +1652,8 @@ if len(jlist) == 19:
                                                                                                 if CAP[3] > sum((val * weight_pool)[:,3]):
                                                                                                     if CAP[4] > sum((val * weight_pool)[:,4]):
                                                                                                         list.append(Superdata, sum(sum(val * P_pool)))
+                                                                                                        X_pool = val
+                                                                                                        print X_pool
                                                                                                         print Superdata
                                                                                                         print max(Superdata)
 
@@ -1723,6 +1770,7 @@ if len(jlist) == 20:
                                                                                                     if CAP[3] > sum((val * weight_pool)[:,3]):
                                                                                                         if CAP[4] > sum((val * weight_pool)[:,4]):
                                                                                                             list.append(Superdata, sum(sum(val * P_pool)))
+                                                                                                            X_pool = val
+                                                                                                            print X_pool
                                                                                                             print Superdata
                                                                                                             print max(Superdata)
-
