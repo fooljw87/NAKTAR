@@ -1,0 +1,153 @@
+import numpy as np
+
+a1 = 'a1'
+a2 = 'a2'
+a3 = 'a3'
+a4 = 'a4'
+a5 = 'a5'
+a6 = 'a6'
+a7 = 'a7'
+a8 = 'a8'
+a9 = 'a9'
+a10 = 'a10'
+a11 = 'a11'
+a12 = 'a12'
+a13 = 'a13'
+a14 = 'a14'
+a15 = 'a15'
+a16 = 'a16'
+a17 = 'a17'
+a18 = 'a18'
+a19 = 'a19'
+a20 = 'a20'
+a21 = 'a21'
+a22 = 'a22'
+a23 = 'a23'
+a24 = 'a24'
+a25 = 'a25'
+
+c0 = 'c0'
+c1 = 'c1'
+c2 = 'c2'
+c3 = 'c3'
+c4 = 'c4'
+c5 = 'c5'
+c6 = 'c6'
+c7 = 'c7'
+c8 = 'c8'
+c9 = 'c9'
+
+
+CAP = [25000, 4500, 7000, 150000, 35000]         # capacity of each factory
+                                                # [0] Yeosu
+                                                # [1] Ulsan
+                                                # [2] Daesan
+                                                # [3] Dangjin
+                                                # [4] Ansan
+
+
+buy_price = np.array([120, 100, 150, 170, 220]) # sourcing cost for each factory
+                                                # [0] Yeosu
+                                                # [1] Ulsan
+                                                # [2] Daesan
+                                                # [3] Dangjin
+                                                # [4] Ansan
+
+
+sell_price = np.array([450,       # 000 price of good to each customer
+                       580,       # 001
+                       400,       # 002
+                       600,       # 003
+                       390,       # 004
+                       450,       # 005
+                       610,       # 006
+                       490,       # 007
+                       500,       # 008
+                       420])      # 009
+
+weight = np.array([4000,          # 000 demand of each customer
+                   1000,          # 001
+                   4000,          # 002
+                   10000,         # 003
+                   7500,          # 004
+                   2000,          # 005
+                   15000,         # 006
+                   9500,          # 007
+                   8000,          # 008
+                   12000])        # 009
+
+weight_array = np.array([[4000],         # 000 demand of each customer
+                        [1000],          # 001
+                        [4000],          # 002
+                        [10000],         # 003
+                        [7500],          # 004
+                        [2000],          # 005
+                        [15000],         # 006
+                        [9500],          # 007
+                        [8000],          # 008
+                        [12000]])        # 009
+
+cost_per_km = 20
+
+
+cuslist = []
+D = np.zeros((10,5), dtype = int)
+P = np.zeros((10,5), dtype = float)
+
+
+class Customer:
+
+    cusnumber = 0
+
+    def __init__(self, name):
+        self.name = name
+        self.distance = []
+        self.price = 0
+        self.number = Customer.cusnumber
+        cuslist.append(self.number)
+        Customer.cusnumber += 1
+
+    def set_distance(self, distance):
+        for x in distance:
+            self.distance.append(x)
+        D[self.number] = self.distance
+
+    def set_price(self, price):
+        self.price = price
+
+    def set_weight(self, weight):
+        self.weight = weight
+
+    def set_profit(self):
+        for i in range(0,5):
+            P[self.number, i] = self.weight * ((self.price - buy_price[i]- D[self.number,i] * cost_per_km))
+
+
+
+a1 = Customer('GS')
+a1.set_distance([1,1,1,1,1])
+a1.set_price(300)
+a1.set_weight(300)
+a1.set_profit()
+
+a2 = Customer('LG')
+a2.set_distance([2,2,2,2,2])
+a2.set_price(300)
+a2.set_weight(300)
+a2.set_profit()
+
+a3 = Customer('Samsung')
+a3.set_distance([1,1,1,1,1])
+a3.set_price(300)
+a3.set_weight(300)
+a3.set_profit()
+
+print a1.distance
+print a1.number
+print a2.number
+print a3.number
+print a1.price
+
+print cuslist
+print D
+print P
