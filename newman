@@ -1,0 +1,475 @@
+import PyQt4
+import numpy as np
+
+################# kth biggest module ################
+
+def kth_biggest(seq, k):
+    """ kth_biggest without sorting all array or repeating to find maximum k times
+        will crash sooner or later becouse of recursion and Python's recursion limit,
+        but not so soon because of divide and conquer algorithm inspired by quicksort
+    """
+    assert k > 0,'k must be positive %i' % k
+    ls = len(seq)
+    if ls < k:
+        raise ValueError('kth %i: only %i elements' % (k, ls))
+    if k == 1:
+        return max(seq)
+    if k == ls:
+        return min(seq)
+    pivot = seq[0]
+    bigger =  [item for item in seq[1:] if item > pivot]
+    if len(bigger) == k - 1:
+        return pivot
+    elif len(bigger) >= k:
+        return kth_biggest(bigger, k)
+    not_bigger = [item for item in seq[1:] if item <= pivot]
+    return kth_biggest(not_bigger, k - len(bigger) - 1)
+
+def kth_smallest(seq, k):
+    return kth_biggest(seq, len(seq) - k + 1)
+
+#####
+
+C000 = 'c000'
+C001 = 'c001'
+C002 = 'c002'
+C003 = 'c003'
+C004 = 'c004'
+C005 = 'c005'
+C006 = 'c006'
+C007 = 'c007'
+C008 = 'c008'
+C009 = 'c009'
+C010 = 'c010'
+C011 = 'c011'
+C012 = 'c012'
+C013 = 'c013'
+C014 = 'c014'
+C015 = 'c015'
+C016 = 'c016'
+C017 = 'c017'
+C018 = 'c018'
+C019 = 'c019'
+
+m = 5
+n = 20
+
+jbasket = np.array([[1,2,3,4,5],
+                    [1,2,3,4,5],
+                    [1,2,3,4,5],
+                    [1,2,3,4,5],
+                    [1,2,3,4,5],
+                    [1,2,3,4,5],
+                    [1,2,3,4,5],
+                    [1,2,3,4,5],
+                    [1,2,3,4,5],
+                    [1,2,3,4,5],
+                    [1,2,3,4,5],
+                    [1,2,3,4,5],
+                    [1,2,3,4,5],
+                    [1,2,3,4,5],
+                    [1,2,3,4,5],
+                    [1,2,3,4,5],
+                    [1,2,3,4,5],
+                    [1,2,3,4,5],
+                    [1,2,3,4,5],
+                    [1,2,3,4,5],
+                    [1,2,3,4,5]])
+
+
+
+zeroset = np.array([[1, 0, 0, 0, 0],
+                    [0, 1, 0, 0, 0],
+                    [0, 0, 1, 0, 0],
+                    [0, 0, 0, 1, 0],
+                    [0, 0, 0, 0, 1]])
+
+Superdata = [0]
+
+CAP = [5000, 4500, 7000, 150000, 35000]         # capacity of each factory
+                                                # [0] Yeosu
+                                                # [1] Ulsan
+                                                # [2] Daesan
+                                                # [3] Dangjin
+                                                # [4] Ansan
+
+buy_price = np.array([120, 100, 150, 170, 220]) # sourcing cost for each factory
+                                                # [0] Yeosu
+                                                # [1] Ulsan
+                                                # [2] Daesan
+                                                # [3] Dangjin
+                                                # [4] Ansan
+
+cost_per_km = 20
+
+D = np.zeros((20,5), dtype = int)
+P = np.zeros((20,5), dtype = float)
+weight = np.zeros((20,1), dtype = float)
+X = np.zeros((20,5), dtype = int)
+
+remaining_CAP = np.zeros((5,1), dtype = float)
+
+cuslist = []
+cusdata = []
+
+class Customer:
+
+    cusnumber = 0
+
+    def __init__(self, name):
+        self.name = name
+        self.distance = []
+        self.price = 0
+        self.number = Customer.cusnumber
+        cuslist.append((self.number, self.name))
+        Customer.cusnumber += 1
+
+    def set_distance(self, distance):
+        for x in distance:
+            self.distance.append(x)
+
+    def set_price(self, price):
+        self.price = price
+
+    def set_weight(self, weight):
+        self.weight = weight
+
+    def apply_data(self):
+        for i in range(0,5):
+            P[self.number, i] = self.weight * (self.price - buy_price[i] - (self.distance[i] * cost_per_km))
+        cusdata.append((self.number, self.name, self.price, self.weight, self.distance))
+        D[self.number] = self.distance
+        weight[self.number] = self.weight
+
+#######
+C000 = Customer('0')
+C000.set_distance([9,7,7,4,1])
+C000.set_price(550)
+C000.set_weight(1300)
+C000.apply_data()
+
+C001 = Customer('1')
+C001.set_distance([1,2,4,5,8])
+C001.set_price(570)
+C001.set_weight(3900)
+C001.apply_data()
+
+C002 = Customer('2')
+C002.set_distance([9,2,1,7,6])
+C002.set_price(590)
+C002.set_weight(300)
+C002.apply_data()
+
+C003 = Customer('3')
+C003.set_distance([7,5,1,4,9])
+C003.set_price(490)
+C003.set_weight(2300)
+C003.apply_data()
+
+C004 = Customer('4')
+C004.set_distance([9,8,1,5,2])
+C004.set_price(470)
+C004.set_weight(2700)
+C004.apply_data()
+
+C005 = Customer('5')
+C005.set_distance([7,2,9,3,1])
+C005.set_price(390)
+C005.set_weight(1000)
+C005.apply_data()
+
+C006 = Customer('6')
+C006.set_distance([9,4,5,3,1])
+C006.set_price(510)
+C006.set_weight(500)
+C006.apply_data()
+
+C007 = Customer('7')
+C007.set_distance([4,2,4,1,6])
+C007.set_price(600)
+C007.set_weight(700)
+C007.apply_data()
+
+C008 = Customer('8')
+C008.set_distance([1,8,7,6,6])
+C008.set_price(650)
+C008.set_weight(900)
+C008.apply_data()
+
+C009 = Customer('9')
+C009.set_distance([2,1,4,6,9])
+C009.set_price(400)
+C009.set_weight(1100)
+C009.apply_data()
+
+C010 = Customer('10')
+C010.set_distance([5,9,5,3,1])
+C010.set_price(490)
+C010.set_weight(10500)
+C010.apply_data()
+
+C011 = Customer('11')
+C011.set_distance([4,7,6,5,2])
+C011.set_price(410)
+C011.set_weight(3000)
+C011.apply_data()
+
+C012 = Customer('12')
+C012.set_distance([3,3,3,7,6])
+C012.set_price(430)
+C012.set_weight(2000)
+C012.apply_data()
+
+C013 = Customer('13')
+C013.set_distance([7,1,1,7,2])
+C013.set_price(450)
+C013.set_weight(2500)
+C013.apply_data()
+
+C014 = Customer('14')
+C014.set_distance([4,2,1,3,2])
+C014.set_price(610)
+C014.set_weight(5000)
+C014.apply_data()
+
+C015 = Customer('15')
+C015.set_distance([5,5,3,7,1])
+C015.set_price(590)
+C015.set_weight(1500)
+C015.apply_data()
+
+C016 = Customer('16')
+C016.set_distance([5,4,8,3,7])
+C016.set_price(570)
+C016.set_weight(1900)
+C016.apply_data()
+
+C017 = Customer('17')
+C017.set_distance([7,1,3,7,5])
+C017.set_price(520)
+C017.set_weight(1500)
+C017.apply_data()
+
+C018 = Customer('18')
+C018.set_distance([7,1,3,1,9])
+C018.set_price(510)
+C018.set_weight(2900)
+C018.apply_data()
+
+C019 = Customer('19')
+C019.set_distance([7,7,2,1,7])
+C019.set_price(470)
+C019.set_weight(2500)
+C019.apply_data()
+
+
+#########
+
+print C000.distance
+print C000.number
+print C001.number
+print C002.number
+print C000.price
+
+print cuslist
+print D
+print P
+
+for (a,b,c,d,e) in cusdata:
+    if a == 3:
+        print b,c,d,e
+
+m = 5
+n = 20
+
+
+
+total_profit = sum(sum(X*P))
+
+################################################# make pools
+
+in_basket = [True, True, False, True, True, True, True, True, True, True,
+             True, True, False, False, False, False, False, False, False, False,
+             False, False, False, False, False, False, False, False, False, False,
+             False, False, False, False, False, False, False, False, False, False]
+
+jlist = []
+
+counter = 0
+for j in range(0,40):
+    if in_basket[j] == True:
+        jlist.append(j)
+
+jpool = np.zeros((len(jlist),m), dtype = int)
+
+for j in range(0, len(jlist)):
+    jpool[j,:] = [1,2,3,4,5]
+
+P_pool = np.zeros((len(jlist),m), dtype = float)
+
+for i in range(0,m):
+    for j in range(len(jlist)):
+        P_pool[j,i] = P[jlist[j], i]
+
+weight_pool = np.zeros((len(jlist), 1), dtype = float)
+
+for j in range(len(jlist)):
+    weight_pool[j] = weight[jlist[j]]
+
+X_pool = np.zeros((len(jlist),m), dtype = int)
+
+#############################################################
+
+
+flow_rate = X * weight
+
+for i in range(0,5):
+    remaining_CAP[i] = CAP[i] - sum(flow_rate[:,i])
+
+opcost = np.zeros((n,m), dtype = float)
+K = np.zeros((n,m), dtype = int)
+
+for i in range(0,m):
+    for j in range(0,n):
+        for k in range(1,5):
+            if P[j,i] == kth_biggest(P[j,:], k):
+                opcost[j,i] = P[j,i] - kth_biggest(P[j,:], k+1)
+                K[j,i] = k - 1
+            elif P[j,i] == min(P[j,:]):
+                K[j,i] = 4
+
+profit_per_unit = np.zeros((30,5), dtype = float)
+Kvert = [[],[],[],[],[]]
+
+
+for i in range(0,m):
+    for j in range(0,n):
+        profit_per_unit[j,i] = P[j,i] / weight[j]
+
+opcost_per_weight = opcost / weight
+#theda = 0
+#priority = 5
+#while priority >= 0:
+#    for j in range(0,len(jlist)):
+#        for i in range(0,5):
+#            if CAP[i] - weight_pool[j] < 0:
+#                jpool[j,i] = 0
+#            flow_rate = X * weight_array
+#            remaining_CAP[i] = CAP[i] - sum(flow_rate[:,i])
+#            while remaining_CAP[i] - weight[j] > 0 and sum(X[j,:]) == 0:
+#            if K[j,i] == priority and
+#            if opcost_per_weight[j,i] > 150:
+#                jpool[j,i] = 0
+#                break
+#        priority -= 1
+
+for i in range(0,m):
+    for j in range(0,len(jlist)):
+        if CAP[i] - weight_pool[j] < 0:
+            jpool[j,i] = 0
+
+theda = 0
+priority = 0
+while priority < 5:
+    for j in range(0,20):
+        for i in range(0,5):
+            flow_rate = X * weight
+            remaining_CAP[i] = CAP[i] - sum(flow_rate[:,i])
+            while remaining_CAP[i] - weight[j] > 0 and sum(X[j,:]) == 0:
+                if K[j,i] == priority and opcost_per_weight[j,i] >= theda:
+                    X[j,i] = 1
+                elif remaining_CAP[i] - weight[j] < 0:
+                    X[j,i] = 0
+                break
+    priority += 1
+
+print 'jlist'
+print jlist
+print 'jpool'
+print jpool
+print 'P_pool'
+print P_pool
+print 'weight_pool'
+print weight_pool
+
+
+
+if 1 == 1:
+    aa0 = 0
+    a0 = jpool[0,aa0]
+    for a0 in jpool[0,:]:
+        if a0 == 0: continue
+        aa0 += 1
+        aa1 = 0
+        a1 = jpool[1,aa1]
+        for a1 in jpool[1,:]:
+            if a1 == 0: continue
+            aa0 += 1
+            aa2 = 0
+            a2 = jpool[2,aa2]
+            for a2 in jpool[2,:]:
+                if a2 == 0: continue
+                aa2 += 1
+                aa3 = 0
+                a3 = jpool[3,aa3]
+                for a3 in jpool[3,:]:
+                    if a3 == 0: continue
+                    aa3 += 1
+                    aa4 = 0
+                    a4 = jpool[4,aa4]
+                    for a4 in jpool[4,:]:
+                        if a4 == 0: continue
+                        aa4 += 1
+                        aa5 = 0
+                        a5 = jpool[5,aa5]
+                        for a5 in jpool[5,:]:
+                            if a5 == 0: continue
+                            aa5 += 1
+                            aa6 = 0
+                            a6 = jpool[6,aa6]
+                            for a6 in jpool[6,:]:
+                                if a6 == 0: continue
+                                aa6 += 1
+                                aa7 = 0
+                                a7 = jpool[7,aa7]
+                                for a7 in jpool[7,:]:
+                                    if a7 == 0: continue
+                                    aa7 += 1
+                                    aa8 = 0
+                                    a8 = jpool[8,aa8]
+                                    for a8 in jpool[8,:]:
+                                        if a8 == 0: continue
+                                        aa8 += 1
+                                        aa9 = 0
+                                        a9 = jpool[9,aa9]
+                                        for a9 in jpool[9,:]:
+                                            if a9 == 0: continue
+                                            aa9 += 1
+                                            aa10 = 0
+                                            a10 = jpool[10,aa10]
+                                            for a10 in jpool[10,:]:
+                                                if a10 == 0: continue
+                                                aa10 += 1
+                                                val = np.array([[a1],
+                                                                [a2],
+                                                                [a3],
+                                                                [a4],
+                                                                [a5],
+                                                                [a6],
+                                                                [a7],
+                                                                [a8],
+                                                                [a9],
+                                                                [a10]])
+                                                print val
+#                                                                                    val.shape = (len(jlist),m)
+#                                                                                    if sum(sum(val*P_pool)) > max(Superdata):
+#                                                                                        if CAP[0] > sum((val * weight_pool)[:,0]):
+#                                                                                            if CAP[1] > sum((val * weight_pool)[:,1]):
+#                                                                                                if CAP[2] > sum((val * weight_pool)[:,2]):
+#                                                                                                    if CAP[3] > sum((val * weight_pool)[:,3]):
+#                                                                                                        if CAP[4] > sum((val * weight_pool)[:,4]):
+#                                                                                                            list.append(Superdata, sum(sum(val * P_pool)))
+#                                                                                                            X_pool = val
+#                                                                                                            print X_pool
+#                                                                                                            print Superdata
+#                                                                                                            print max(Superdata)
