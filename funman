@@ -99,7 +99,7 @@ zeroset = np.array([[1, 0, 0, 0, 0],
 
 Superdata = [0]
 
-CAP = [5000, 4000, 15500, 2200, 20000]         # capacity of each factory
+CAP = [3000, 2000, 15500, 1200, 20000]         # capacity of each factory
                                                 # [0] Yeosu
                                                 # [1] Ulsan
                                                 # [2] Daesan
@@ -362,25 +362,6 @@ for i in xrange(0,m):
     for j in xrange(0,n):
         profit_per_unit[j,i] = P[j,i] / weight[j]
 
-opcost_per_weight = opcost / weight
-#theda = 0
-#priority = 5
-#while priority >= 0:
-#    for j in xrange(0,len(jlist)):
-#        for i in xrange(0,5):
-#            if CAP[i] - weight_pool[j] < 0:
-#                jpool[j,i] = 0
-#            flow_rate = X * weight_array
-#            remaining_CAP[i] = CAP[i] - sum(flow_rate[:,i])
-#            while remaining_CAP[i] - weight[j] > 0 and sum(X[j,:]) == 0:
-#            if K[j,i] == priority and
-#            if opcost_per_weight[j,i] > 150:
-#                jpool[j,i] = 0
-#                break
-#        priority -= 1
-
-
-
 theda = 0
 priority = 0
 while priority < 5:
@@ -407,27 +388,6 @@ print CAP
 print 'weight_pool'
 print weight_pool
 
-X01 = np.zeros((5*1, 10, 1 * 4 + 1), dtype = int)
-X02 = np.zeros((5*2, 10, 2 * 4 + 1), dtype = int)
-X03 = np.zeros((5*3, 10, 3 * 4 + 1), dtype = int)
-X04 = np.zeros((5*4, 10, 4 * 4 + 1), dtype = int)
-X05 = np.zeros((5*5, 10, 5 * 4 + 1), dtype = int)
-X06 = np.zeros((5*6, 10, 6 * 4 + 1), dtype = int)
-X07 = np.zeros((5*7, 10, 7 * 4 + 1), dtype = int)
-X08 = np.zeros((5*8, 10, 8 * 4 + 1), dtype = int)
-X09 = np.zeros((5*9, 10, 9 * 4 + 1), dtype = int)
-X10 = np.zeros((5*10, 10, 10 * 4 + 1), dtype = int)
-X11 = np.zeros((5*11, 10, 11 * 4 + 1), dtype = int)
-X12 = np.zeros((5*12, 10, 12 * 4 + 1), dtype = int)
-X13 = np.zeros((5*13, 10, 13 * 4 + 1), dtype = int)
-X14 = np.zeros((5*14, 10, 14 * 4 + 1), dtype = int)
-X15 = np.zeros((5*15, 10, 15 * 4 + 1), dtype = int)
-X16 = np.zeros((5*16, 10, 16 * 4 + 1), dtype = int)
-X17 = np.zeros((5*17, 10, 17 * 4 + 1), dtype = int)
-X18 = np.zeros((5*18, 10, 18 * 4 + 1), dtype = int)
-X19 = np.zeros((5*19, 10, 19 * 4 + 1), dtype = int)
-X20 = np.zeros((5*20, 10, 20 * 4 + 1), dtype = int)
-
 K = np.zeros((len(jlist), m), dtype = int)
 
 for j in xrange(0, len(jlist)):
@@ -437,7 +397,6 @@ for j in xrange(0, len(jlist)):
                 K[j,i] = k + 1
 
 print K
-
 
 for i in xrange(0,m):
     for j in xrange(0,len(jlist)):
@@ -1038,7 +997,7 @@ def fun():
                 break_counter += 1
             if break_counter == 4:
                 break
-                
+
 
 
     if len(jlist) == 10:
