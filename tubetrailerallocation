@@ -1,0 +1,86 @@
+#import Logistics_database
+
+## extracted data
+
+#naphtha = module.naphtha ## "module" = external data collection module
+#LNG = module.LNG
+#C3LPG = module.C3LPG
+
+##
+ANSAN_sources = []
+YEOSU_sources = []
+ULSAN_sources = []
+DAESAN_sources = []
+DANGJIN_sources = []
+
+class customer: ## class of customers
+	is_price_formula = True ## is the price of hydrogen supplied based on a formula or is it fixed?
+	def __init__(self, name):
+		self.operating_pressure = 0 ## operating pressure is the minimum pressure of hydrogen input
+	def set_coordinates(self, x_coordinate, y_coordinate): ## coordinates of location (or could be address based)
+		self.coordinates = (x_coordinate, y_coordinate)
+	def sell_price(self, sell_price): ## the price of which we sell our hydrogen at
+		self.sell_price = sell_price
+		if self.sell_price != str: ## if price is a string, it would mean it is a formula which needs external data to be completed into a number
+			self.is_price_formula = False       #@#@#@#@#@#@#@ NOT WORKING @#@#@#@#@#@#@#
+	class impurity_requirement: ## a subclass of impurity requirements. ex) LG INNOTEK doesn't like N2 and requires its composition to be less than 2 ppm
+		def __init__(self, impurity, ppm): ## impurity code number, parts per million
+			self.impurity = impurity
+			self.ppm = ppm
+
+
+class source: ## class of sources
+	is_price_formula = True ## is the price of hydrogen supplied based on a formula or is it fixed?
+	def __init__(self, name, factory_code, sourcing_capacity): ## name of source, code of parent factory
+		self.name = name
+		self.factory_code = factory_code ## ULSAN, DANGJIN, YEOSU, DAESAN, ANSAN
+		self.sourcing_capacity = sourcing_capacity	## sourcing capacity, may be dependent on external variables
+		if self.factory_code == 'ULSAN':
+			list.append(ANSAN_sources, (self.name, self.sourcing_capacity))
+		if self.factory_code == 'DANGJIN':
+			list.append(ANSAN_sources, (self.name, self.sourcing_capacity))
+		if self.factory_code == 'YEOSU':
+			list.append(ANSAN_sources, (self.name, self.sourcing_capacity))
+		if self.factory_code == 'DAESAN':
+			list.append(ANSAN_sources, (self.name, self.sourcing_capacity))
+		if self.factory_code == 'ANSAN':
+			list.append(ANSAN_sources, (self.name, self.sourcing_capacity))
+	def variable_cost(self, variable_cost_formula): ###if available, variable cost of production. ex) LG, LOTTE
+		self.variable_cost = variable_cost_formula
+	def buying_price(self, buying_price): ## the price at which SPG buys hydrogen
+		self.buying_price = buying_price
+		if self.buying_price != str: ## if price is a string, it would mean it is a formula which needs external data to be completed into a number
+			self.is_price_formula = False #@#@#@#@#@#@#@ NOT WORKING @#@#@#@#@#@#@#
+
+	class impurity_composition: ## impurity composition of source, need info because it maybe unfit for use in certain applications
+		def __init__(self, impurity, ppm):
+			self.impurity = impurity
+			self.ppm = ppm
+
+class factory: ## class of factories (collection of sources)
+	def __init__(self, name):
+		self.name = name  ##
+	def set_coordinates(self, x_coordinate, y_coordinate):
+		self.coordinates = (x_coordinate, y_coordinate)
+
+
+
+
+
+class agenda:
+	def __init__(self, name, submit_time, start_time, deadline):
+		self.name = name
+
+C000 = 'c000'
+
+C000 = customer('GS')
+C000.sell_price(1)
+print C000.sell_price
+print C000.is_price_formula
+
+S000 = source('Lotte', 'ANSAN', 500)
+
+print ANSAN_sources
+print S000.is_price_formula
+
+
